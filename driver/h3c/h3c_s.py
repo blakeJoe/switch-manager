@@ -2,8 +2,7 @@ import re
 from driver.telnet import TelnetClient
 from driver.ssh import SSHClient
 from string import strip
-from driver.utils import vlan_str_to_list, remove_null, get_vsi_name, get_vsi_by_vsi_name, \
-                         get_port_list, get_vpn_instance_list, ip_to_segment
+from utils import remove_null, ip_to_segment
 
 
 class H3CS:

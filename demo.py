@@ -3,9 +3,8 @@
 
 import re
 import threading
-import MySQLdb
 from driver.driver import get_driver
-from driver.utils import get_data_in_tuple, remove_null, int_netmask, format_netmask
+from utils import get_data_in_tuple, remove_null
 from concurrent.futures import ThreadPoolExecutor
 
 INFO = []
@@ -77,7 +76,7 @@ class MyThread(threading.Thread):   #继承父类threading.Thread
         '每周一次'
         self.check_tedb_network_lsa(switch, driver)
         '==========='
-        # self.check_mpls_tunnel_num(switch, driver)
+        self.check_mpls_tunnel_num(switch, driver)
         '==========='
         # self.check_cpu_usage(switch, driver)
         # self.check_transceiver(switch, driver)

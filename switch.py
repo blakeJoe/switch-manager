@@ -1,63 +1,31 @@
-#!/usr/bin/python
-# -*- coding: UTF-8 -*
+from metadata import ONLINE_USER, ONLINE_PSW, TEST_USER, TEST_PSW
 
-from metadata import SWITCH_FILE_PATH, TEST_SWITCH_FILE_PATH
-from concurrent.futures import ThreadPoolExecutor
 
 class Switch(object):
 
-    def __init__(self, name, m_ip, **kwargs):
-        self.name = name
-        self.switch_type = None
-        self.sub_type = None
-        self.m_ip = m_ip
+    def __init__(self, *args, **kwargs):
+        self.name = kwargs['name']
+        self.m_ip = kwargs['m_ip']
         self.protocol = "TELNET"
         self.port = 23
-        "-----------online-----------"
-        self.username = "sdn-server"
-        self.password = "SDNsyscloud20!7"
-        "-----------test-----------"
-        # self.username = "admin"
-        # self.password = "syscloud@123"
+        self.username = None
+        self.password = None
 
+        self.switch_type = self.switch_name_analyze(self.name)
+        self.set_user_data(type='online')
 
-class SwitchPool(object):
+    def set_user_data(self, type='test'):
+        if type == 'test':
+            self.username = TEST_USER
+            self.password = TEST_PSW
+        else:
+            self.username = ONLINE_USER
+            self.password = ONLINE_PSW
 
-    def __init__(self):
-
-        self.switches = []
-        self.switches_iter = None
-        self.get_switches()
-        self.init_switches_iter()
-
-    def get_switches(self):
-        with open(TEST_SWITCH_FILE_PATH, mode='r') as f:
-        # with open(SWITCH_FILE_PATH, mode='r') as f:
-            content = f.read()
-            f.close()
-        content = content.split()
-        for i in range(len(content)//2):
-            self.switches.append(Switch(content[2*i], content[2*i+1]))
-        print("switches load success!")
-
-    def init_switches_iter(self):
-        self.switches_iter = iter(self.switches)
-        print("init switches iter success")
-
-    def get_next_switch(self):
-        try:
-            switch_obj = next(self.switches_iter)
-            return switch_obj
-        except StopIteration:
-            self.init_switches_iter()
-            return 'traverse switch complete!'
-
-
-
-
-
-
-
-
-
-
+    def switch_name_analyze(self, name):
+        if '6820' in name:
+            return 'h3c_s'
+        elif '12804' in name:
+            return 'huawei_ce'
+        else:
+            return 'huawei_s'

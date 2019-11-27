@@ -2,8 +2,7 @@ import re
 import time
 from driver.telnet import TelnetClient
 from driver.ssh import SSHClient
-from driver.utils import vlan_str_to_list, remove_null, get_vsi_name, get_vsi_by_vsi_name, get_port_list, \
-                        get_vpn_instance_list, ip_to_segment, int_netmask
+from utils import remove_null
 
 
 class SwitchCE:

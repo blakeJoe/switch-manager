@@ -1,2 +1,7 @@
-SWITCH_FILE_PATH = 'G:/docu/switch.txt'
-TEST_SWITCH_FILE_PATH = 'G:/docu/has.txt'
+# online environment
+ONLINE_USER = "sdn-server"
+ONLINE_PSW = "SDNsyscloud20!7"
+
+#test enviroment
+TEST_USER = 'admin'
+TEST_PSW = 'syscloud@123'

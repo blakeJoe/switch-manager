@@ -1,32 +1,27 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*
 
-from flask import Flask, jsonify
-from flask import request
-from switch import SwitchPool
-from handler import HandlerPool
-
-app = Flask(__name__)
+import re
+from switch import Switch
+from device import Device
+from concurrent.futures import ThreadPoolExecutor
 
 
-@app.route('/api/shutdown_interfaces', methods=['POST'])
-def shutdown_interfaces():
-    sw = switch_pool.get_next_switch()
-    if not isinstance(sw, str):
-        hl = HandlerPool(sw)
-        res, sd_intfs = hl.shutdown_interfaces()
-        data = {
-            'switch_name': sw.name,
-            'switch_ip': sw.m_ip,
-            'shutdown_interfaces': sd_intfs,
-            'result': res,
-        }
-        return jsonify({'result': data}), 200
-    else:
-        return sw, 200
+def main():
+    """
+    open('G:/docu/has.txt')
+    open('G:/docu/switch.txt')
+    """
+    with open('G:/docu/switch.txt', 'r') as f:
+        switch_list = f.readlines()
+    with ThreadPoolExecutor(20) as executor:
+        for switch_info in switch_list:
+            switch_info = re.split(r'[\t\n]', switch_info)
+            sw = Switch(name=switch_info[0], m_ip=switch_info[1])
+            dev = Device(sw)
+            executor.submit(dev.run)
 
 
 if __name__ == '__main__':
-    switch_pool = SwitchPool()
-    app.run(debug=True, host='0.0.0.0', port=8080)
+    main()
 
