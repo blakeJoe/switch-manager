@@ -640,7 +640,7 @@ class SwitchS:
         else:
             for line in result:
                 line = line.split()
-                if len(line) > 4:
+                if len(line) > 4 and ('GigabitEthernet' in line[0] or 'XGigabitEthernet' in line[0]):
                     if line[1] == 'down' or line[2] == 'down':
                         if line[1] == 'down' and line[2] == 'down':
                             both_down_intf.append(line[0])
