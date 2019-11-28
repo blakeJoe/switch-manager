@@ -143,7 +143,7 @@ class H3CS:
                     else:
                         count += 1
                         continue
-                if len(line) > 3:
+                if len(line) > 3 and ('MGE' in line[0] or 'HGE' in line[0]):
                     if line[1] == 'DOWN' or line[2] == 'DOWN':
                         if line[1] == 'DOWN' and line[2] == 'DOWN':
                             both_down_intf.append(line[0])
