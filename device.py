@@ -43,3 +43,11 @@ class Device(object):
         print '\n{} ----- {}: \n each_down_interfaces:  {}'.format(self.switch.name, self.switch.m_ip, each_res)
         print '\n{} ----- {}: \n both_down_interfaces:  {}'.format(self.switch.name, self.switch.m_ip, both_res)
 
+    def check_ssh(self):
+        pass
+
+    def check_interface_ip(self):
+        ip = '3.3.3.3'
+        result = self.driver.check_interfae_ip(ip)
+        print result
+
