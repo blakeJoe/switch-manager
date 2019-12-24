@@ -2,7 +2,7 @@ import re
 from driver.telnet import TelnetClient
 from driver.ssh import SSHClient
 from string import strip
-from utils import remove_null, ip_to_segment
+from utils import remove_null, ip_to_segment, switch_port_type_filter
 
 
 class H3CS:
@@ -13,12 +13,13 @@ class H3CS:
         self.port = switch.port
         self.username = switch.username
         self.password = switch.password
+        self.switch_type = switch.switch_type
         self.client = None
 
     def _execute(self, commands):
         result = None
         for cmd in commands:
-            result = self.client.execute(cmd)
+            result = self.client.execute(cmd, sysview=self.client_sysview)
         return result
 
     def connect(self):
@@ -36,6 +37,7 @@ class H3CS:
             self.client.login(switch_type='h3c')
         self.client.execute('screen-length disable')
         self.client.execute('system-view')
+        self.client_sysview = True
 
     def disconnect(self):
         if self.client:
@@ -50,6 +52,7 @@ class H3CS:
         self._execute(cmd)
 
     def quit(self):
+        self.client_sysview = False
         cmd = [
             'quit'
         ]
@@ -143,7 +146,7 @@ class H3CS:
                     else:
                         count += 1
                         continue
-                if len(line) > 3 and ('MGE' in line[0] or 'HGE' in line[0]):
+                if len(line) > 3 and switch_port_type_filter(self.switch_type, line[0]):
                     if line[1] == 'DOWN' or line[2] == 'DOWN':
                         if line[1] == 'DOWN' and line[2] == 'DOWN':
                             both_down_intf.append(line[0])

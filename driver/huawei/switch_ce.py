@@ -2,7 +2,7 @@ import re
 import time
 from driver.telnet import TelnetClient
 from driver.ssh import SSHClient
-from utils import remove_null
+from utils import remove_null, switch_port_type_filter
 
 
 class SwitchCE:
@@ -13,12 +13,13 @@ class SwitchCE:
         self.port = switch.port
         self.username = switch.username
         self.password = switch.password
+        self.switch_type = switch.switch_type
         self.client = None
 
     def _execute(self, commands):
         result = None
         for cmd in commands:
-            result = self.client.execute(cmd)
+            result = self.client.execute(cmd, sysview=self.client_sysview)
         return result
 
     def connect(self):
@@ -37,6 +38,7 @@ class SwitchCE:
         time.sleep(1)
         self.client.execute('screen-length 0 temporary')
         self.client.execute('system-view')
+        self.client_sysview = True
 
     def disconnect(self):
         if self.client:
@@ -57,6 +59,7 @@ class SwitchCE:
         self._execute(cmd)
 
     def quit(self):
+        self.client_sysview = False
         cmd = [
             'quit'
         ]
@@ -130,7 +133,7 @@ class SwitchCE:
         else:
             for line in result:
                 line = line.split()
-                if len(line) > 4 and ('GigabitEthernet' in line[0] or 'XGigabitEthernet' in line[0] or '40GE' in line[0]):
+                if len(line) > 4 and switch_port_type_filter(self.switch_type, line[0]):
                     if line[1] == 'down' or line[2] == 'down':
                         if line[1] == 'down' and line[2] == 'down':
                             both_down_intf.append(line[0])

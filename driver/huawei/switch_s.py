@@ -3,7 +3,7 @@ import time
 from driver.telnet import TelnetClient
 from driver.sw_ssh import SSHClient
 from utils import vlan_str_to_list, remove_null, get_vsi_name, get_vsi_by_vsi_name, get_port_list, \
-                        get_vpn_instance_list, ip_to_segment, int_netmask
+                        get_vpn_instance_list, ip_to_segment, int_netmask, switch_port_type_filter
 
 
 class SwitchS:
@@ -14,6 +14,7 @@ class SwitchS:
         self.port = switch.port
         self.username = switch.username
         self.password = switch.password
+        self.switch_type = switch.switch_type
         self.client = None
         self.client_sysview = False
 
@@ -38,8 +39,8 @@ class SwitchS:
             self.client.login()
         time.sleep(1)
         self.client.execute('screen-length 0 temporary')
-        self.client_sysview = True
         self.client.execute('system-view', sysview=self.client_sysview)
+        self.client_sysview = True
 
     def disconnect(self):
         if self.client:
@@ -640,7 +641,7 @@ class SwitchS:
         else:
             for line in result:
                 line = line.split()
-                if len(line) > 4 and ('GigabitEthernet' in line[0] or 'XGigabitEthernet' in line[0] or '40GE' in line[0]):
+                if len(line) > 4 and switch_port_type_filter(self.switch_type, line[0]):
                     if line[1] == 'down' or line[2] == 'down':
                         if line[1] == 'down' and line[2] == 'down':
                             both_down_intf.append(line[0])

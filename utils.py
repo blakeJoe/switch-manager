@@ -112,3 +112,15 @@ def ip_to_segment(ip, netmask):
             res = res + "."
         res = res + str(int(ips[i]) & int(netmasks[i]))
     return res
+
+
+def switch_port_type_filter(switch_type, intf):
+    switch_intf_map = {
+        'huawei_s': ['GigabitEtherne', 'XGigabitEthernet', '40GE', '100GE'],
+        'huawei_ce': ['10GE', '40GE', '100GE'],
+        'h3c_s': ['HGE', 'XGE']
+    }
+    for allow_type in switch_intf_map.get(switch_type):
+        if allow_type in intf:
+            return True
+    return False

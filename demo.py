@@ -3,6 +3,7 @@
 
 import re
 import threading
+import MySQLdb
 from driver.driver import get_driver
 from utils import get_data_in_tuple, remove_null
 from concurrent.futures import ThreadPoolExecutor
@@ -343,24 +344,6 @@ class MyThread(threading.Thread):   #继承父类threading.Thread
 #         thread = MyThread(result)
 #         thread.start()
 
-def main():
-    """
-    open('G:/docu/has.txt')
-    open('G:/docu/switch.txt')
-    """
-    thread = MyThread()
-    with open('G:/docu/switch.txt', 'r') as f:
-        switch_list = f.readlines()
-    with ThreadPoolExecutor(20) as executor:
-        for switch in switch_list:
-            switch = re.split(r'[\t\n]', switch)
-            executor.submit(self.get_isispeer_remote, obj)
-
-
-
-
-
-
 
 # while 1:
 #     result = re.split('[\n]', f.readline())
@@ -400,4 +383,4 @@ def main():
 #
 
 if __name__ == '__main__':
-    main()
+    pass
