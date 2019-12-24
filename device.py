@@ -56,3 +56,12 @@ class Device(object):
         # _, _, result = self.driver.get_interface_status(no_processing=True)
         print '\n{} ----- {}: \n shutdown interfaces:  {}'.format(self.switch.name, self.switch.m_ip, shutdown_intfs)
 
+    def check_ssh(self):
+        pass
+
+    def check_interface_ip(self):
+        ip = '3.3.3.3'
+        result = self.driver.check_interfae_ip(ip)
+        print result
+
+

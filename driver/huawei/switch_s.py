@@ -729,6 +729,21 @@ class SwitchS:
         ]
         self._execute(cmd)
 
+    def check_interfae_ip(self, ip):
+        cmd = [
+            'dis ip int brief | in {}'.format(ip)
+        ]
+        result = self._execute(cmd)
+        result = re.split('[\r\n]', result)
+        result = remove_null(result)
+        return result
+
+    def is_ssh_local_account_enable(self):
+        cmd = [
+            'dis cur conf aaa | in ssh'
+        ]
+        result = self._execute(cmd)
+
     def enable_local_account_ssh(self):
         cmd = [
             'aaa',
